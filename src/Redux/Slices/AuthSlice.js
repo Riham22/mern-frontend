@@ -4,57 +4,58 @@ import { connectSocket, getSocket } from '../../utils/socketClient';
 
 
 
-const myLink =`https://mern-backend-l6sx.onrender.com`;
+// const myLink =`https://mern-backend-l6sx.onrender.com`;
 
-
+const myLink =`https://mern-backend-bx9x.onrender.com`
 
 export const loginUser = createAsyncThunk(
-  '/login',
-  async (userData, thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
-
+  "/login",
+  async (userData, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${myLink}/login`, userData, {
-        withCredentials: true
+        withCredentials: true,
       });
 
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
+      if (!response.data?.user || !response.data?.token) {
+        return rejectWithValue(response.data?.message || "Invalid username or password");
+      }
 
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error.response?.data?.message || error.message || "Login error");
     }
   }
 );
 
 
-export const registerUser = createAsyncThunk(
-  '/register',
-  async (userData, thunkAPI) => {
-    const { dispatch, rejectWithValue } = thunkAPI;
 
+export const registerUser = createAsyncThunk(
+  "/register",
+  async (userData, { dispatch, rejectWithValue }) => {
     try {
       const response = await axios.post(`${myLink}/register`, userData, {
-        withCredentials: true
+        withCredentials: true,
       });
+
+      if (!response.data?.user || !response.data?.token) {
+        return rejectWithValue(response.data?.message || "Signup failed");
+      }
 
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("user", JSON.stringify(response.data.user));
 
       dispatch(setUser({
         user: response.data.user,
-        token: response.data.token
+        token: response.data.token,
       }));
 
-      console.log('success');
       return response.data;
-
     } catch (error) {
-      return rejectWithValue(error.response?.data || error.message);
+      return rejectWithValue(error.response?.data?.message || error.message || "Signup error");
     }
   }
 );
+
 
 
 
@@ -73,7 +74,7 @@ export const forgotPassword = createAsyncThunk(
 );
 
 export const resetPassword = createAsyncThunk(
-  '/reset',
+  'reset',
   async ({ token, newPassword }, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${myLink}/reset/${token}`, { newPassword }, { withCredentials: true });
@@ -85,7 +86,7 @@ export const resetPassword = createAsyncThunk(
   }
 );
 export const logoutUser = createAsyncThunk(
-  '/logout',
+  'logout',
   async (_, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${myLink}/logout`, null, { withCredentials: true });
@@ -98,13 +99,16 @@ export const logoutUser = createAsyncThunk(
   }
 );
 export const loadUser = createAsyncThunk(
-  '/home',
+  'home',
   async (_, { rejectWithValue }) => {
     try {
       const res = await axios.get(`${myLink}/home`, {
         withCredentials: true,
       });
-
+      if (!res.data.status) {
+        return rejectWithValue("User not authenticated");
+      }
+      
       if (res.data.status) {
         console.log( {username: res.data.user });
         
@@ -113,6 +117,7 @@ export const loadUser = createAsyncThunk(
       } else {
         return rejectWithValue("User not authenticated");
       }
+      
 
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);

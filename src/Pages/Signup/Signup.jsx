@@ -22,9 +22,14 @@ const Signup = () => {
     e.preventDefault();
     try {
       const result = await dispatch(registerUser({ username, password }));
+      if (registerUser.rejected.match(result)) {
+        toast.error(result.payload?.message || "Signup failed");
+        return;
+      }
+      
       if (result.payload?.user) {
-        setUsername("");
-        setPassword("");
+        localStorage.setItem("token", result.payload.token);
+        localStorage.setItem("user", JSON.stringify(result.payload.user));
         navigate("/home");
       }
     } catch (err) {

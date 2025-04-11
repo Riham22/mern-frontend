@@ -63,14 +63,14 @@ const handleLogout=()=>{
           <><NavLink
             className="text-gray-700 font-semibold"
             color="foreground"
-            to={"/taskList"}
+            to={"/tasks"}
           >
             <NavbarItem>Task List </NavbarItem>
           </NavLink>
           <NavLink
             className="text-gray-700 font-semibold"
             color="foreground"
-            to={""}
+            to={"/add"}
           >
               <NavbarItem>Add </NavbarItem>
             </NavLink>

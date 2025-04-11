@@ -6,9 +6,17 @@ import { DatePicker } from "@heroui/react";
 import { addNotification } from "../../Redux/Slices/NotificationSlice";
 
 import { useEffect } from "react";
-import io from "socket.io-client";
-const myLink='https://mern-backend-l6sx.onrender.com';
-const socket = io(myLink,{withCredentials:true});
+import { io } from "socket.io-client";
+
+const myLink='https://mern-backend-bx9x.onrender.com';
+
+const socket = io(myLink,{withCredentials:true, transports: ["websocket", "polling"]});
+ 
+
+
+
+
+
 const AddTask = () => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");

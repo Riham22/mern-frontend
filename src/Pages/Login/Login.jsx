@@ -23,18 +23,21 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const result = await dispatch(loginUser({ username, password }));
-      if (result.payload?.user) {
-        localStorage.setItem("token", result.payload.token);
-        localStorage.setItem("user", JSON.stringify(result.payload.user));
-  console.log(result.payload.user);
+      const result = await dispatch(loginUser({ username, password })).unwrap();
+      toast.success("Login successful");
+      navigate("/home");
+      
+if (loginUser.rejected.match(result)) {
+  toast.error(result.payload?.message || "Login failed");
+  return;
+}
+
+if (result.payload?.user) {
+  localStorage.setItem("token", result.payload.token);
+  localStorage.setItem("user", JSON.stringify(result.payload.user));
   
-        setUsername("");
-        setPassword("");
-        navigate("/home");
-      } else {
-        toast.error("Login failed");
-      }
+  navigate("/home");
+}
     } catch (err) {
       toast.error("Login failed: " + err.message);
     }

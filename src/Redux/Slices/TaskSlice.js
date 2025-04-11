@@ -1,18 +1,20 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const BASE_URL = 'https://mern-backend-l6sx.onrender.com'; 
+// const BASE_URL = 'https://mern-backend-l6sx.onrender.com'; 
+const BASE_URL = 'https://mern-backend-bx9x.onrender.com'; 
 
-export const addTask = createAsyncThunk('tasks/addTask', async (task, thunkAPI) => {
+
+export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
   try {
-    const response = await axios.post(`${BASE_URL}/tasks`, task);
+    const response = await axios.post(`${BASE_URL}/add`, task);
     return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
   }
 });
 
-export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (_, thunkAPI) => {
+export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
   try {
     const response = await axios.get(`${BASE_URL}/tasks`);
     return response.data;
@@ -21,18 +23,18 @@ export const fetchTasks = createAsyncThunk('tasks/fetchTasks', async (_, thunkAP
   }
 });
 
-export const updateTask = createAsyncThunk('tasks/updateTask', async ({ id, updatedData }, thunkAPI) => {
+export const updateTask = createAsyncThunk('edit', async ({ id, updatedData }, thunkAPI) => {
   try {
-    const response = await axios.put(`${BASE_URL}/tasks/${id}`, updatedData);
+    const response = await axios.put(`${BASE_URL}/edit/${id}`, updatedData);
     return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to update task');
   }
 });
 
-export const deleteTask = createAsyncThunk('tasks/deleteTask', async (taskId, thunkAPI) => {
+export const deleteTask = createAsyncThunk('delete', async (taskId, thunkAPI) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/tasks/${taskId}`);
+    const response = await axios.delete(`${BASE_URL}/delete/${taskId}`);
     return response.data.id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');

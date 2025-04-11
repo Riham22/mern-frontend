@@ -37,9 +37,9 @@ function App() {
       element: <Layout />,
       children: [
         { index: true, element:<ProtectedRoutes><Home/></ProtectedRoutes> },
-        {path:'tasks',element:<ProtectedRoutes><Home/></ProtectedRoutes>},
+        // {path:'tasks',element:<ProtectedRoutes><Home/></ProtectedRoutes>},
         {path:'home',element:<ProtectedRoutes><Home/></ProtectedRoutes>},
-        {path:'taskList',element:<ProtectedRoutes><TasksPage/></ProtectedRoutes>},
+        {path:'tasks',element:<ProtectedRoutes><TasksPage/></ProtectedRoutes>},
         { path: 'login', element:<Login /> },
         { path: 'register', element: <Signup />  },
         { path: 'logout', element: <Login /> },
