@@ -1,0 +1,26 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* @import url('https://fonts.googleapis.com/css2?family=Albert+Sans:ital,wght@0,100..900;1,100..900&display=swap'); */
+
+
+html {
+  position: relative;
+  /* min-height: 100%; */
+}
+
+html::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+   height: 100%;
+   width: 100%; 
+  background-image: url('./assets/error.jpg');
+  background-size: cover;
+  background-position: center;
+  opacity: 0.6; 
+  z-index: -1;
+}
+
+  
