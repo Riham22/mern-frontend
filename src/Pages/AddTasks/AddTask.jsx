@@ -8,7 +8,8 @@ import { addNotification } from "../../Redux/Slices/NotificationSlice";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 
-const myLink='https://mern-backend-bx9x.onrender.com';
+const myLink='mern-backend-production-4d08.up.railway.app';
+// 'https://mern-backend-bx9x.onrender.com';
 
 const socket = io(myLink,{withCredentials:true, transports: ["websocket", "polling"]});
  

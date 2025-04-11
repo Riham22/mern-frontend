@@ -2,7 +2,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // const BASE_URL = 'https://mern-backend-l6sx.onrender.com'; 
-const BASE_URL = 'https://mern-backend-bx9x.onrender.com'; 
+const BASE_URL ='mern-backend-production-4d08.up.railway.app';
+//  'https://mern-backend-bx9x.onrender.com'; 
 
 
 export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {

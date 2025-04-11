@@ -6,7 +6,8 @@ import { connectSocket, getSocket } from '../../utils/socketClient';
 
 // const myLink =`https://mern-backend-l6sx.onrender.com`;
 
-const myLink =`https://mern-backend-bx9x.onrender.com`
+const myLink ='mern-backend-production-4d08.up.railway.app';
+// `https://mern-backend-bx9x.onrender.com`
 
 export const loginUser = createAsyncThunk(
   "/login",

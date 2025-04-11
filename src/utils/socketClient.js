@@ -3,7 +3,8 @@ import { io } from 'socket.io-client';
 
 let socket;
 // const myLink = "https://mern-backend-l6sx.onrender.com";
-const myLink = "https://mern-backend-bx9x.onrender.com";
+const myLink = 'mern-backend-production-4d08.up.railway.app';
+// "https://mern-backend-bx9x.onrender.com";
 
 
 
@@ -20,7 +21,7 @@ export const connectSocket = (token) => {
 
   socket = io(myLink, {
     auth: { token },
-    transports: [ "polling"],
+    transports: ["polling","websocket"],
     withCredentials: true,
   });
 
