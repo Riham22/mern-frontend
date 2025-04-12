@@ -15,6 +15,7 @@ export const loginUser = createAsyncThunk(
     try {
       const response = await axios.post(`${myLink}/login`, userData, {
         withCredentials: true,
+        transports: ["websocket", "polling"]
       });
 
       if (!response.data?.user || !response.data?.token) {
@@ -36,6 +37,7 @@ export const registerUser = createAsyncThunk(
     try {
       const response = await axios.post(`${myLink}/register`, userData, {
         withCredentials: true,
+        transports: ["websocket", "polling"]
       });
 
       if (!response.data?.user || !response.data?.token) {
@@ -65,7 +67,7 @@ export const forgotPassword = createAsyncThunk(
   '/forgot',
   async (username, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${myLink}/forgot`, { username }, { withCredentials: true });
+      const response = await axios.post(`${myLink}/forgot`, { username }, { withCredentials: true ,transports: ["websocket", "polling"]});
       return response.data;
     } catch (error) {
       console.log(error.message);
@@ -78,7 +80,7 @@ export const resetPassword = createAsyncThunk(
   'reset',
   async ({ token, newPassword }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${myLink}/reset/${token}`, { newPassword }, { withCredentials: true });
+      const response = await axios.post(`${myLink}/reset/${token}`, { newPassword }, { withCredentials: true,transports: ["websocket", "polling"] });
       return response.data;
     } catch (error) {
       console.log(error.message);
@@ -105,6 +107,7 @@ export const loadUser = createAsyncThunk(
     try {
       const res = await axios.get(`${myLink}/home`, {
         withCredentials: true,
+        transports: ["websocket", "polling"]
       });
       if (!res.data.status) {
         return rejectWithValue("User not authenticated");
