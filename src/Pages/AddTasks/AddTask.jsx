@@ -1,25 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../../Redux/Slices/TaskSlice";
-import sound from '../../assets/notification.wav'
-import { DatePicker } from "@heroui/react";
+import sound from '../../assets/notification.wav';
 import { addNotification } from "../../Redux/Slices/NotificationSlice";
-
-import { useEffect } from "react";
-import { io } from "socket.io-client";
-
-const myLink='https://mern-backend-production-4d08.up.railway.app';
-// 'https://mern-backend-bx9x.onrender.com';
-
-const socket = io(myLink,{withCredentials:true, 
-  transports: ["websocket", "polling"]
-}
-);
- 
-
-
-
-
+import { connectSocket } from "../../socket/socketClient"; // ✅ استيراد الـ connectSocket
 
 const AddTask = () => {
   const [taskTitle, setTaskTitle] = useState("");
@@ -30,6 +14,7 @@ const AddTask = () => {
 
   const dispatch = useDispatch();
   const taskStatus = useSelector((state) => state.tasks.status);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -48,13 +33,12 @@ const AddTask = () => {
     const newTask = {
       title: taskTitle,
       description: taskDescription,
-      dateTime: taskDate, 
+      dateTime: taskDate,
       remindMe: taskRemindMe,
     };
 
     try {
       await dispatch(addTask(newTask)).unwrap();
-
       new Audio(sound).play();
 
       dispatch(
@@ -64,14 +48,12 @@ const AddTask = () => {
         })
       );
 
-
       const notifyTime = taskDate.getTime() - 5 * 60 * 1000;
       const timeUntilNotify = notifyTime - currentTime.getTime();
 
       if (timeUntilNotify > 0 && taskRemindMe) {
         setTimeout(() => {
           new Audio(sound).play();
-
           dispatch(
             addNotification({
               id: new Date().getTime(),
@@ -93,6 +75,11 @@ const AddTask = () => {
   };
 
   useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) return;
+
+    const socket = connectSocket(token);
+
     socket.on("taskReminder", (reminder) => {
       dispatch(
         addNotification({
@@ -101,31 +88,24 @@ const AddTask = () => {
         })
       );
     });
-  
+
     return () => {
-      socket.off("taskReminder"); 
+      socket.off("taskReminder");
     };
   }, [dispatch]);
-  
+
   return (
     <div className="container mx-auto p-4">
-      
-
       <form
         onSubmit={handleSubmit}
-        className="bg-gray-100 p-10 text-gray-500  shadow-sm mb-6 border-[1px] rounded-3xl bg-opacity-80"
+        className="bg-gray-100 p-10 text-gray-500 shadow-sm mb-6 border-[1px] rounded-3xl bg-opacity-80"
       >
         <h1 className="text-xl text-center text-gray-500 font-medium mb-4">Add Task</h1>
+        {err && <p className="text-red-500">Error: {err}</p>}
 
-{err && <p className="text-red-500">Error: {err}</p>}
         <div className="row flex flex-col lg:flex-row md:flex-col sm:flex-col m-1 gap-1 ">
-          <div className="mb-2 lg:w-1/2 md: block md:w-full  ">
-            <label
-              htmlFor="title"
-              className="inline-block my-1 text-gray-500 text-md font-medium"
-            >
-              Title
-            </label>
+          <div className="mb-2 lg:w-1/2 md: block md:w-full">
+            <label htmlFor="title" className="inline-block my-1 text-gray-500 text-md font-medium">Title</label>
             <input
               type="text"
               id="title"
@@ -136,38 +116,26 @@ const AddTask = () => {
             />
           </div>
 
-          <div className="mb-2 lg:w-1/2 md: block md:w-full ">
-            <label
-              htmlFor="dat"
-              className="inline-block my-1 text-gray-500 text-md font-medium"
-            >
-              Deadline
-            </label>
+          <div className="mb-2 lg:w-1/2 md: block md:w-full">
+            <label htmlFor="dat" className="inline-block my-1 text-gray-500 text-md font-medium">Deadline</label>
             <input
-            id="dat"
-          className="w-full focus:outline-none p-[11px] border-[1px] rounded-lg text-xs"
-          type="datetime-local"
-          value={taskDateTime}
-          onChange={(e) => setTaskDateTime(e.target.value)}
-        />
-            
+              id="dat"
+              className="w-full focus:outline-none p-[11px] border-[1px] rounded-lg text-xs"
+              type="datetime-local"
+              value={taskDateTime}
+              onChange={(e) => setTaskDateTime(e.target.value)}
+            />
           </div>
         </div>
 
         <div className="mb-4 m-1">
-
-        <label
-          htmlFor="description"
-          className="inline-block my-1 text-gray-500 text-md font-medium"
-        >
-          Description
-        </label>
-        <input
-          id="description"
-          className="w-full p-2 border focus:outline-none rounded-lg   flex flex-row gap-4"
-          value={taskDescription}
-          onChange={(e) => setTaskDescription(e.target.value)}
-        />
+          <label htmlFor="description" className="inline-block my-1 text-gray-500 text-md font-medium">Description</label>
+          <input
+            id="description"
+            className="w-full p-2 border focus:outline-none rounded-lg flex flex-row gap-4"
+            value={taskDescription}
+            onChange={(e) => setTaskDescription(e.target.value)}
+          />
         </div>
 
         <div className="mb-4">
@@ -178,12 +146,7 @@ const AddTask = () => {
             checked={taskRemindMe}
             onChange={() => setTaskRemindMe(!taskRemindMe)}
           />
-          <label
-            htmlFor="remindMe"
-            className="inline-block  text-gray-500  text-sm font-medium"
-          >
-            Remind Me
-          </label>
+          <label htmlFor="remindMe" className="inline-block text-gray-500 text-sm font-medium">Remind Me</label>
         </div>
 
         <button
