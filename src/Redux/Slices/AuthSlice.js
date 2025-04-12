@@ -3,10 +3,10 @@ import axios from 'axios';
 import { connectSocket, getSocket } from '../../utils/socketClient';
 
 
-
+const front ='mern-backend-production-4d08.up.railway.app';
 // const myLink =`https://mern-backend-l6sx.onrender.com`;
 
-const myLink ='mern-backend-production-4d08.up.railway.app';
+const myLink ='https://mern-backend-production-4d08.up.railway.app';
 // `https://mern-backend-bx9x.onrender.com`
 
 export const loginUser = createAsyncThunk(
@@ -78,7 +78,7 @@ export const resetPassword = createAsyncThunk(
   'reset',
   async ({ token, newPassword }, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${myLink}/reset/${token}`, { newPassword }, { withCredentials: true });
+      const response = await axios.post(`${front}/reset/${token}`, { newPassword }, { withCredentials: true });
       return response.data;
     } catch (error) {
       console.log(error.message);
@@ -100,7 +100,7 @@ export const logoutUser = createAsyncThunk(
   }
 );
 export const loadUser = createAsyncThunk(
-  'home',
+  'verify',
   async (_, { rejectWithValue }) => {
     try {
       const res = await axios.get(`${myLink}/home`, {
