@@ -3,7 +3,7 @@ import axios from 'axios';
 import { connectSocket, getSocket } from '../../utils/socketClient';
 
 
-const front ='mern-backend-production-4d08.up.railway.app';
+// const front ='اففحسmern-backend-production-4d08.up.railway.app';
 // const myLink =`https://mern-backend-l6sx.onrender.com`;
 
 const myLink ='https://mern-backend-production-4d08.up.railway.app';

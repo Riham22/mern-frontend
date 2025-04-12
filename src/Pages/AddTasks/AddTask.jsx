@@ -12,7 +12,7 @@ const myLink='https://mern-backend-production-4d08.up.railway.app';
 // 'https://mern-backend-bx9x.onrender.com';
 
 const socket = io(myLink,{withCredentials:true, 
-  // transports: ["websocket", "polling"]
+  transports: ["websocket", "polling"]
 }
 );
  
