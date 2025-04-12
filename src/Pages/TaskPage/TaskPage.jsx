@@ -18,7 +18,7 @@ const TasksPage = () => {
   }, [dispatch]);
 
   return (
-    <div className=" container mx-auto p-4">
+    <div className=" min-h-screen mx-auto p-4">
 
       
       <div className="mx-auto px-6 ">

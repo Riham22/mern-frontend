@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask } from "../../Redux/Slices/TaskSlice";
+import { addTask } from "../../Redux/Slices/TaskSlice.js";
 import sound from '../../assets/notification.wav';
-import { addNotification } from "../../Redux/Slices/NotificationSlice";
-import { connectSocket } from "../../socket/socketClient"; // ✅ استيراد الـ connectSocket
+import { addNotification } from "../../Redux/Slices/NotificationSlice.js";
+import { connectSocket } from "../../utils/socketClient.js";
 
 const AddTask = () => {
   const [taskTitle, setTaskTitle] = useState("");
