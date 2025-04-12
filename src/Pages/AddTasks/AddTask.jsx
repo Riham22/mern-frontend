@@ -95,7 +95,7 @@ const AddTask = () => {
   }, [dispatch]);
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="min-h-screen mx-auto p-4">
       <form
         onSubmit={handleSubmit}
         className="bg-gray-100 p-10 text-gray-500 shadow-sm mb-6 border-[1px] rounded-3xl bg-opacity-80"
