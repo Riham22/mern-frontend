@@ -18,7 +18,7 @@ export const connectSocket = (token) => {
     console.warn("⛔ No token provided, socket will not connect.");
     return;
   }
-
+  console.log("🔐 Connecting socket with token:", token);
   socket = io(myLink, {
     auth: { token },
     transports: ["polling","websocket"],

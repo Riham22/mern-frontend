@@ -38,7 +38,9 @@ const AddTask = () => {
     };
 
     try {
-      await dispatch(addTask(newTask)).unwrap();
+      const response=await dispatch(addTask(newTask)).unwrap();
+      console.log("✅ Task added response:", response);
+
       new Audio(sound).play();
 
       dispatch(
@@ -69,6 +71,8 @@ const AddTask = () => {
       setTaskRemindMe(false);
       setErr("");
     } catch (error) {
+      console.error("Full Error:", error); // دي هتطبعلك كل حاجة
+  setErr(error.response?.data?.message || error.message || "Something went wrong");
       setErr(error.message || "Something went wrong");
       console.error("Error adding task:", error); // دا الايرور اللي طلعلي ف الكونسول اول ما دست submit
     }
@@ -77,8 +81,10 @@ const AddTask = () => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
+    console.log("🔑 Token from localStorage (for socket):", token);
 
     const socket = connectSocket(token);
+console.log('hi this is addTask.jsx useEffect');
 
     socket.on("taskReminder", (reminder) => {
       dispatch(

@@ -170,8 +170,9 @@ const AuthSlice = createSlice({
         state.isAuthenticated = true;
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         localStorage.setItem("token", action.payload.token);
-        const socket = connectSocket(action.payload.token);
-  socket.emit("user_logged_in", action.payload.user);
+        const token = localStorage.getItem("token");
+        const socket = connectSocket(token);
+          socket.emit("user_logged_in", action.payload.user);
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.isLoading = false;
