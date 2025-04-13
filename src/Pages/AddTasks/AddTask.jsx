@@ -70,7 +70,7 @@ const AddTask = () => {
       setErr("");
     } catch (error) {
       setErr(error.message || "Something went wrong");
-      console.error("Error adding task:", error);
+      console.error("Error adding task:", error); // دا الايرور اللي طلعلي ف الكونسول اول ما دست submit
     }
   };
 

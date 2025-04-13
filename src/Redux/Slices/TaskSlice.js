@@ -8,7 +8,7 @@ const BASE_URL ='mern-backend-production-4d08.up.railway.app';
 
 export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
   try {
-    const response = await axios.post(`${BASE_URL}/add`, task);
+    const response = await axios.post(`${BASE_URL}/add`, task, {withCredentials:true});
     return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
@@ -17,7 +17,7 @@ export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
 
 export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tasks`);
+    const response = await axios.get(`${BASE_URL}/tasks`, {withCredentials:true});
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
@@ -26,7 +26,7 @@ export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
 
 export const updateTask = createAsyncThunk('edit', async ({ id, updatedData }, thunkAPI) => {
   try {
-    const response = await axios.put(`${BASE_URL}/edit/${id}`, updatedData);
+    const response = await axios.put(`${BASE_URL}/edit/${id}`, updatedData, {withCredentials:true});
     return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to update task');
@@ -35,7 +35,7 @@ export const updateTask = createAsyncThunk('edit', async ({ id, updatedData }, t
 
 export const deleteTask = createAsyncThunk('delete', async (taskId, thunkAPI) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/delete/${taskId}`);
+    const response = await axios.delete(`${BASE_URL}/delete/${taskId}`, {withCredentials:true});
     return response.data.id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
