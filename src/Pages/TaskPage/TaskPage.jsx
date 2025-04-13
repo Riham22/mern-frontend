@@ -28,9 +28,10 @@ const TasksPage = () => {
     <p className="text-white font-semibold text-lg">No tasks available</p>
   ) : (
     <ul>
-      {tasks.map((task) => (
-        <TaskItem key={task._id || task.id} task={task} />
-      ))}
+      {tasks.filter(task => task && (task._id || task.id))
+    .map((task) => (
+      <TaskItem key={task._id || task.id} task={task} />
+    ))}
     </ul>
   )
 ) : (
