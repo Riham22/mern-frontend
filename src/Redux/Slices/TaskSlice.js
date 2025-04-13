@@ -60,23 +60,38 @@ const taskSlice = createSlice({
       .addCase(addTask.pending, (state) => { state.status = 'loading'; })
       .addCase(addTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.tasks.push(action.payload);
+      
+        const newTask = action.payload.task; // ✅ نوصل للـ task الحقيقي
+      
+        if (Array.isArray(state.tasks)) {
+          state.tasks.push(newTask);
+        } else {
+          state.tasks = [newTask];
+        }
       })
-      .addCase(addTask.rejected, (state, action) => {
-        state.status = 'failed';
-        state.error = action.payload;
-      })
-
+        .addCase(addTask.rejected, (state, action) => {
+          state.status = 'failed';
+          state.error = action.payload || "Failed to add task";
+          console.error("🟥 addTask failed with:", action.payload);
+        });
+        
+builder
       .addCase(fetchTasks.pending, (state) => { state.status = 'loading'; })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.tasks = action.payload;
+      
+        if (Array.isArray(action.payload)) {
+          state.tasks = action.payload;
+        } else {
+          state.tasks = [];
+          console.warn('⚠️ fetchTasks returned unexpected data:', action.payload);
+        }
       })
       .addCase(fetchTasks.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       })
-
+builder
       .addCase(updateTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
         const index = state.tasks.findIndex(task => task._id === action.payload._id);
@@ -84,7 +99,7 @@ const taskSlice = createSlice({
           state.tasks[index] = action.payload;
         }
       })
- 
+ builder
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.tasks = state.tasks.filter(task => task._id !== action.payload);
