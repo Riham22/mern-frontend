@@ -10,7 +10,7 @@ const TasksPage = () => {
 
   
   const dispatch = useDispatch();
-  const tasks = useSelector((state) => state.tasks.tasks);
+  const tasks = useSelector((state) => state.tasks.tasks || []);
 
   
   useEffect(() => {
@@ -23,15 +23,20 @@ const TasksPage = () => {
       
       <div className="mx-auto px-6 ">
         <h2 className="my text-3xl text-center font-semibold text-white mb-4">Task List</h2>
-        {tasks.length === 0 ? (
-          <p className="text-white font-semibold text-lg">No tasks available</p>
-        ) : (
-          <ul>
-            {tasks.map((task) => (
-              <TaskItem key={task._id || task.id} task={task} />
-            ))}
-          </ul>
-        )}
+        {Array.isArray(tasks) ? (
+  tasks.length === 0 ? (
+    <p className="text-white font-semibold text-lg">No tasks available</p>
+  ) : (
+    <ul>
+      {tasks.map((task) => (
+        <TaskItem key={task._id || task.id} task={task} />
+      ))}
+    </ul>
+  )
+) : (
+  <p className="text-white font-semibold text-lg">Loading tasks...</p>
+)}
+
       </div>
     
       
