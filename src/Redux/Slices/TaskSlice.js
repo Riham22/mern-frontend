@@ -60,15 +60,15 @@ const taskSlice = createSlice({
       .addCase(addTask.pending, (state) => { state.status = 'loading'; })
       .addCase(addTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
-      
-        const newTask = action.payload.task; // ✅ نوصل للـ task الحقيقي
+        console.log(action.payload);
+        const newTask = action.payload; // ✅ كده تمام
       
         if (Array.isArray(state.tasks)) {
           state.tasks.push(newTask);
         } else {
           state.tasks = [newTask];
         }
-      })
+      })      
         .addCase(addTask.rejected, (state, action) => {
           state.status = 'failed';
           state.error = action.payload || "Failed to add task";
