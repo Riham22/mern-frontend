@@ -60,7 +60,7 @@ function App() {
         },
 
         {
-          path: "tasks",
+          path: "get-tasks",
           element: (
             <ProtectedRoutes>
               <TasksPage />

@@ -6,7 +6,7 @@ const BASE_URL = 'https://mern-backend-production-4d08.up.railway.app';
 //  'https://mern-backend-bx9x.onrender.com'; 
 
 
-export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
+export const addTask = createAsyncThunk('add-task', async (task, thunkAPI) => {
   try {
     console.log("🚀 Sending task payload:", task); 
     const response = await axios.post(`${BASE_URL}/add`, task, { withCredentials: true });
@@ -21,7 +21,7 @@ export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
   }
 });
 
-export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
+export const fetchTasks = createAsyncThunk('get-tasks', async (_, thunkAPI) => {
   try {
     const response = await axios.get(`${BASE_URL}/tasks`, { withCredentials: true });
     
