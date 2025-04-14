@@ -8,10 +8,14 @@ const BASE_URL = 'https://mern-backend-production-4d08.up.railway.app';
 
 export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
   try {
+    console.log("🚀 Sending task payload:", task); 
     const response = await axios.post(`${BASE_URL}/add`, task, { withCredentials: true });
-    console.log("📦 Full addTask response:", response.data);
-    console.log("✅ FULL RESPONSE:", response);
+    console.log("📦 FULL addTask response:", response.data); 
+    if (!response.data.task) {
+      throw new Error("Task not returned from server");
+    }
     return response.data.task;
+    
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
   }
