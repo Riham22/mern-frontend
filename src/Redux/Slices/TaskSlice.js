@@ -2,14 +2,16 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
 // const BASE_URL = 'https://mern-backend-l6sx.onrender.com'; 
-const BASE_URL ='https://mern-backend-production-4d08.up.railway.app';
+const BASE_URL = 'https://mern-backend-production-4d08.up.railway.app';
 //  'https://mern-backend-bx9x.onrender.com'; 
 
 
 export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
   try {
-    const response = await axios.post(`${BASE_URL}/add`, task, {withCredentials:true});
-    return response.data;
+    const response = await axios.post(`${BASE_URL}/add`, task, { withCredentials: true });
+    console.log("📦 Full addTask response:", response.data);
+
+    return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
   }
@@ -17,8 +19,8 @@ export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
 
 export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
   try {
-    const response = await axios.get(`${BASE_URL}/tasks`, {withCredentials:true});
-    return response.data;
+    const response = await axios.get(`${BASE_URL}/tasks`, { withCredentials: true });
+    return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
   }
@@ -26,7 +28,7 @@ export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
 
 export const updateTask = createAsyncThunk('edit', async ({ id, updatedData }, thunkAPI) => {
   try {
-    const response = await axios.put(`${BASE_URL}/edit/${id}`, updatedData, {withCredentials:true});
+    const response = await axios.put(`${BASE_URL}/edit/${id}`, updatedData, { withCredentials: true });
     return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to update task');
@@ -35,7 +37,7 @@ export const updateTask = createAsyncThunk('edit', async ({ id, updatedData }, t
 
 export const deleteTask = createAsyncThunk('delete', async (taskId, thunkAPI) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/delete/${taskId}`, {withCredentials:true});
+    const response = await axios.delete(`${BASE_URL}/delete/${taskId}`, { withCredentials: true });
     return response.data.id;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
@@ -60,26 +62,24 @@ const taskSlice = createSlice({
       .addCase(addTask.pending, (state) => { state.status = 'loading'; })
       .addCase(addTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
-  console.log("📦 Full payload:", action.payload);
-  const newTask = action.payload.task;
+        const newTask = action.payload;
+        if (Array.isArray(state.tasks)) {
+          state.tasks.push(newTask);
+        } else {
+          state.tasks = [newTask];
+        }
+      })
+      .addCase(addTask.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || "Failed to add task";
+        console.error("🟥 addTask failed with:", action.payload);
+      });
 
-  if (Array.isArray(state.tasks)) {
-    state.tasks.push(newTask);
-  } else {
-    state.tasks = [newTask];
-  }
-      })      
-        .addCase(addTask.rejected, (state, action) => {
-          state.status = 'failed';
-          state.error = action.payload || "Failed to add task";
-          console.error("🟥 addTask failed with:", action.payload);
-        });
-        
-builder
+    builder
       .addCase(fetchTasks.pending, (state) => { state.status = 'loading'; })
       .addCase(fetchTasks.fulfilled, (state, action) => {
         state.status = 'succeeded';
-      
+
         if (Array.isArray(action.payload)) {
           state.tasks = action.payload;
         } else {
@@ -91,7 +91,7 @@ builder
         state.status = 'failed';
         state.error = action.payload;
       })
-builder
+    builder
       .addCase(updateTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
         const index = state.tasks.findIndex(task => task._id === action.payload._id);
@@ -99,7 +99,7 @@ builder
           state.tasks[index] = action.payload;
         }
       })
- builder
+    builder
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.tasks = state.tasks.filter(task => task._id !== action.payload);
