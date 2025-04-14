@@ -9,7 +9,7 @@ const BASE_URL ='https://mern-backend-production-4d08.up.railway.app';
 export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
   try {
     const response = await axios.post(`${BASE_URL}/add`, task, {withCredentials:true});
-    return response.data.task;
+    return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
   }
@@ -27,7 +27,7 @@ export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
 export const updateTask = createAsyncThunk('edit', async ({ id, updatedData }, thunkAPI) => {
   try {
     const response = await axios.put(`${BASE_URL}/edit/${id}`, updatedData, {withCredentials:true});
-    return response.data.task;
+    return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to update task');
   }
@@ -60,14 +60,14 @@ const taskSlice = createSlice({
       .addCase(addTask.pending, (state) => { state.status = 'loading'; })
       .addCase(addTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        console.log(action.payload);
-        const newTask = action.payload; // ✅ كده تمام
-      
-        if (Array.isArray(state.tasks)) {
-          state.tasks.push(newTask);
-        } else {
-          state.tasks = [newTask];
-        }
+  console.log("📦 Full payload:", action.payload);
+  const newTask = action.payload.task;
+
+  if (Array.isArray(state.tasks)) {
+    state.tasks.push(newTask);
+  } else {
+    state.tasks = [newTask];
+  }
       })      
         .addCase(addTask.rejected, (state, action) => {
           state.status = 'failed';
