@@ -71,9 +71,10 @@ const AddTask = () => {
 
       setTaskTitle("");
       setTaskDescription("");
-      setTaskDateTime(new Date());
+      setTaskDateTime(formatDateTime(new Date())); // ✅ ده الصح
       setTaskRemindMe(false);
       setErr("");
+      
     } catch (error) {
       console.error("Full Error:", error); // دي هتطبعلك كل حاجة
   setErr(error.response?.data?.message || error.message || "Something went wrong");
