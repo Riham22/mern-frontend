@@ -70,7 +70,7 @@ const handleLogout=()=>{
           <NavLink
             className="text-gray-700 font-semibold"
             color="foreground"
-            to={"/add"}
+            to={"/add-task"}
           >
               <NavbarItem>Add </NavbarItem>
             </NavLink>

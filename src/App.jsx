@@ -51,7 +51,7 @@ function App() {
           ),
         },
         {
-          path: "add",
+          path: "add-task",
           element: (
             <ProtectedRoutes>
               <AddTask />
