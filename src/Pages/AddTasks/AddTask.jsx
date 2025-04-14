@@ -8,8 +8,12 @@ import { connectSocket } from "../../utils/socketClient.js";
 const AddTask = () => {
   const [taskTitle, setTaskTitle] = useState("");
   const [taskDescription, setTaskDescription] = useState("");
-  const [taskDateTime, setTaskDateTime] = useState(new Date("2025-01-01T05:00:00Z"));
-  const [taskRemindMe, setTaskRemindMe] = useState(false);
+  const formatDateTime = (date) => {
+    return new Date(date).toISOString().slice(0, 16); // yyyy-MM-ddThh:mm
+  };
+  const [taskDateTime, setTaskDateTime] = useState(formatDateTime(new Date()));
+
+    const [taskRemindMe, setTaskRemindMe] = useState(false);
   const [err, setErr] = useState("");
 
   const dispatch = useDispatch();
@@ -33,7 +37,7 @@ const AddTask = () => {
     const newTask = {
       title: taskTitle,
       description: taskDescription,
-      dateTime: taskDate,
+      dateTime: new Date(taskDateTime),
       remindMe: taskRemindMe,
     };
 
