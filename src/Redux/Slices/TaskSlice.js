@@ -10,7 +10,7 @@ export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
   try {
     const response = await axios.post(`${BASE_URL}/add`, task, { withCredentials: true });
     console.log("📦 Full addTask response:", response.data);
-
+    console.log("✅ FULL RESPONSE:", response);
     return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
@@ -20,7 +20,8 @@ export const addTask = createAsyncThunk('add', async (task, thunkAPI) => {
 export const fetchTasks = createAsyncThunk('tasks', async (_, thunkAPI) => {
   try {
     const response = await axios.get(`${BASE_URL}/tasks`, { withCredentials: true });
-    return response.data.task;
+    
+    return response.data;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
   }

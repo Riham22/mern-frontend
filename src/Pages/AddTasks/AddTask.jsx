@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../../Redux/Slices/TaskSlice.js";
-import sound from '../../assets/notification.wav';
+import sound from "../../assets/notification.wav";
 import { addNotification } from "../../Redux/Slices/NotificationSlice.js";
 import { connectSocket } from "../../utils/socketClient.js";
 
@@ -13,7 +13,7 @@ const AddTask = () => {
   };
   const [taskDateTime, setTaskDateTime] = useState(formatDateTime(new Date()));
 
-    const [taskRemindMe, setTaskRemindMe] = useState(false);
+  const [taskRemindMe, setTaskRemindMe] = useState(false);
   const [err, setErr] = useState("");
 
   const dispatch = useDispatch();
@@ -37,14 +37,13 @@ const AddTask = () => {
     const newTask = {
       title: taskTitle,
       description: taskDescription,
-      dateTime: formatDateTime(new Date()),
+      dateTime: taskDateTime,
       remindMe: taskRemindMe,
     };
 
     try {
-      const response=await dispatch(addTask(newTask)).unwrap();
+      const response = await dispatch(addTask(newTask)).unwrap();
       console.log("✅ Task added response:", response);
-
 
       dispatch(
         addNotification({
@@ -74,10 +73,11 @@ const AddTask = () => {
       setTaskDateTime(formatDateTime(new Date())); // ✅ ده الصح
       setTaskRemindMe(false);
       setErr("");
-      
     } catch (error) {
       console.error("Full Error:", error); // دي هتطبعلك كل حاجة
-  setErr(error.response?.data?.message || error.message || "Something went wrong");
+      setErr(
+        error.response?.data?.message || error.message || "Something went wrong"
+      );
       setErr(error.message || "Something went wrong");
       console.error("Error adding task:", error); // دا الايرور اللي طلعلي ف الكونسول اول ما دست submit
     }
@@ -89,13 +89,15 @@ const AddTask = () => {
     console.log("🔑 Token from localStorage (for socket):", token);
 
     const socket = connectSocket(token);
-console.log('hi this is addTask.jsx useEffect');
+    console.log("hi this is addTask.jsx useEffect");
 
     socket.on("taskReminder", (reminder) => {
       dispatch(
         addNotification({
           id: new Date().getTime(),
-          message: `Reminder: ${reminder.title} is due at ${new Date(reminder.time).toLocaleTimeString()}`,
+          message: `Reminder: ${reminder.title} is due at ${new Date(
+            reminder.time
+          ).toLocaleTimeString()}`,
         })
       );
     });
@@ -111,12 +113,19 @@ console.log('hi this is addTask.jsx useEffect');
         onSubmit={handleSubmit}
         className="bg-gray-100 p-10 text-gray-500 shadow-sm mb-6 border-[1px] rounded-3xl bg-opacity-80"
       >
-        <h1 className="text-xl text-center text-gray-500 font-medium mb-4">Add Task</h1>
+        <h1 className="text-xl text-center text-gray-500 font-medium mb-4">
+          Add Task
+        </h1>
         {err && <p className="text-red-500">Error: {err}</p>}
 
         <div className="row flex flex-col lg:flex-row md:flex-col sm:flex-col m-1 gap-1 ">
           <div className="mb-2 lg:w-1/2 md: block md:w-full">
-            <label htmlFor="title" className="inline-block my-1 text-gray-500 text-md font-medium">Title</label>
+            <label
+              htmlFor="title"
+              className="inline-block my-1 text-gray-500 text-md font-medium"
+            >
+              Title
+            </label>
             <input
               type="text"
               id="title"
@@ -128,7 +137,12 @@ console.log('hi this is addTask.jsx useEffect');
           </div>
 
           <div className="mb-2 lg:w-1/2 md: block md:w-full">
-            <label htmlFor="dat" className="inline-block my-1 text-gray-500 text-md font-medium">Deadline</label>
+            <label
+              htmlFor="dat"
+              className="inline-block my-1 text-gray-500 text-md font-medium"
+            >
+              Deadline
+            </label>
             <input
               id="dat"
               className="w-full focus:outline-none p-[11px] border-[1px] rounded-lg text-xs"
@@ -140,7 +154,12 @@ console.log('hi this is addTask.jsx useEffect');
         </div>
 
         <div className="mb-4 m-1">
-          <label htmlFor="description" className="inline-block my-1 text-gray-500 text-md font-medium">Description</label>
+          <label
+            htmlFor="description"
+            className="inline-block my-1 text-gray-500 text-md font-medium"
+          >
+            Description
+          </label>
           <input
             id="description"
             className="w-full p-2 border focus:outline-none rounded-lg flex flex-row gap-4"
@@ -157,7 +176,12 @@ console.log('hi this is addTask.jsx useEffect');
             checked={taskRemindMe}
             onChange={() => setTaskRemindMe(!taskRemindMe)}
           />
-          <label htmlFor="remindMe" className="inline-block text-gray-500 text-sm font-medium">Remind Me</label>
+          <label
+            htmlFor="remindMe"
+            className="inline-block text-gray-500 text-sm font-medium"
+          >
+            Remind Me
+          </label>
         </div>
 
         <button
