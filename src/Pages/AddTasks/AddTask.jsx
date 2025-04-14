@@ -45,7 +45,6 @@ const AddTask = () => {
       const response=await dispatch(addTask(newTask)).unwrap();
       console.log("✅ Task added response:", response);
 
-      new Audio(sound).play();
 
       dispatch(
         addNotification({
@@ -68,6 +67,7 @@ const AddTask = () => {
           );
         }, timeUntilNotify);
       }
+      new Audio(sound).play();
 
       setTaskTitle("");
       setTaskDescription("");
