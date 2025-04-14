@@ -37,7 +37,7 @@ const AddTask = () => {
     const newTask = {
       title: taskTitle,
       description: taskDescription,
-      dateTime: new Date(taskDateTime),
+      dateTime: formatDateTime(new Date()),
       remindMe: taskRemindMe,
     };
 
