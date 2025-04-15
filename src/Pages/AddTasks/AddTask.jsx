@@ -43,7 +43,7 @@ const AddTask = () => {
 
     try {
       const response = await dispatch(addTask(newTask)).unwrap();
-      console.log("✅ Task added response:", response);
+      console.log("✅ Task added response:", response?.title || response);
 
       dispatch(
         addNotification({

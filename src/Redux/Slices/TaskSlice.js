@@ -12,7 +12,7 @@ export const addTask = createAsyncThunk('add-task', async (task, thunkAPI) => {
     const response = await axios.post(`${BASE_URL}/add`, task, { withCredentials: true });
     console.log("📦 FULL addTask response:", response.data); 
     if (!response.data.task) {
-      throw new Error("Task not returned from server");
+      throw new Error("⚠️ Task not returned from server. Got instead: " + JSON.stringify(response.data));
     }
     return response.data.task;
     
@@ -34,7 +34,7 @@ export const fetchTasks = createAsyncThunk('get-tasks', async (_, thunkAPI) => {
 export const updateTask = createAsyncThunk('edit', async ({ id, updatedData }, thunkAPI) => {
   try {
     const response = await axios.put(`${BASE_URL}/edit/${id}`, updatedData, { withCredentials: true });
-    return response.data;
+    return response.data.task;
   } catch (error) {
     return thunkAPI.rejectWithValue(error.response?.data?.message || 'Failed to update task');
   }
@@ -97,13 +97,13 @@ const taskSlice = createSlice({
         state.error = action.payload;
       })
     builder
-      .addCase(updateTask.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        const index = state.tasks.findIndex(task => task._id === action.payload._id);
-        if (index !== -1) {
-          state.tasks[index] = action.payload;
-        }
-      })
+    .addCase(updateTask.fulfilled, (state, action) => {
+      const updatedTask = action.payload.task;
+      const index = state.tasks.findIndex(task => task._id === updatedTask._id);
+      if (index !== -1) {
+        state.tasks[index] = updatedTask;
+      }
+    })
     builder
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
