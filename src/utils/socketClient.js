@@ -1,7 +1,7 @@
 import { io } from 'socket.io-client';
 import store from './../Redux/store';
 // import { updateTask } from '../Redux/Slices/TaskSlice';
-import sound from "../../assets/notification.wav";
+import sound from "../assets/notification.wav";
 
 
 let socket;
