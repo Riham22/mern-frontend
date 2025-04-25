@@ -60,7 +60,15 @@ const taskSlice = createSlice({
     removeTask: (state, action) => {
       state.tasks = state.tasks.filter(task => task._id !== action.payload);
     },
+    updateTaskFromSocket: (state, action) => {
+      const updatedTask = action.payload;
+      const index = state.tasks.findIndex(task => task._id === updatedTask._id);
+      if (index !== -1) {
+        state.tasks[index] = updatedTask;
+      }
+    },
   },
+  
   extraReducers: (builder) => {
     builder
 
