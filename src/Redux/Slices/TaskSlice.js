@@ -63,7 +63,7 @@ export const fetchUsers = createAsyncThunk(
       });
       console.log("🎯 Users API Response:", response.data);
 
-      return response.data.users;
+      return response.data;
     } catch (error) {
       return rejectWithValue(error.response.data);
     }
