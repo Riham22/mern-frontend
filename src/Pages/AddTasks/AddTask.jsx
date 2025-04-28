@@ -18,7 +18,7 @@ const AddTask = () => {
   const [assignedTo, setAssignedTo] = useState("");
   const dispatch = useDispatch();
   const taskStatus = useSelector((state) => state.tasks.status);
-  const {users} = useSelector((state) => state.tasks);
+  const users = useSelector((state) => state.tasks.users);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
