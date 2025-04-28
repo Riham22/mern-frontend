@@ -146,7 +146,8 @@ const taskSlice = createSlice({
       })
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.users = action.payload; // تخزين المستخدمين المسترجعين
+        state.users = action.payload; 
+        console.log("🎯 Users successfully stored in Redux:", action.payload);
       })
       .addCase(fetchUsers.rejected, (state, action) => {
         state.status = 'failed';
