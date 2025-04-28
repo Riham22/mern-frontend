@@ -51,11 +51,11 @@ export const deleteTask = createAsyncThunk('delete', async (taskId, thunkAPI) =>
 
 
 export const fetchUsers = createAsyncThunk(
-  "tasks/fetchUsers",
+  "fetchUsers",
   async (_, { rejectWithValue }) => {
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.get(`${BASE_URL}/users`, {
+      const response = await axios.get(`${BASE_URL}/home`, {
         headers: {
           Authorization: `Bearer ${token}`
         },
