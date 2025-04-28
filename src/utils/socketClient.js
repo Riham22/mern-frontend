@@ -1,13 +1,9 @@
 import { io } from 'socket.io-client';
-import store from './../Redux/store';
-// import { updateTask } from '../Redux/Slices/TaskSlice';
-import sound from "../assets/notification.wav";
+
 
 
 let socket;
-// const myLink = "https://mern-backend-l6sx.onrender.com";
 const myLink = 'https://mern-backend-production-4d08.up.railway.app';
-// "https://mern-backend-bx9x.onrender.com";
 
 
 
@@ -22,7 +18,7 @@ export const connectSocket = (token) => {
 
   if (!token || !currentUser?._id) {
     console.warn("⛔ Token or user ID missing, socket will not connect.");
-    return;
+    return null;
   }
 
   console.log("🔐 Connecting socket with token:", token);
@@ -40,15 +36,15 @@ export const connectSocket = (token) => {
     console.log("✅ Connected to socket server:", socket.id);
     socket.emit("join-room", currentUser._id);
   });
-  socket.on("task-updated", (task) => {
-    console.log("📦 Task updated via socket:", task);
-    sound.play().catch((e) =>
-      console.warn("🔇 Edit sound failed:", e)
-    );
-    store.dispatch({ type: 'tasks/updateTaskFromSocket', payload: task });
+  // socket.on("task-updated", (task) => {
+  //   console.log("📦 Task updated via socket:", task);
+
+  //   const dispatcher = externalDispatch || store.dispatch;
+  //   dispatcher({ type: 'tasks/updateTask/fulfilled', payload: task });
+
+  //   alert(`✏️ تم تعديل المهمة: ${task.title}`);
   
-    alert(`✏️ تم تعديل المهمة: ${task.title}`);
-  });
+  // });
   
   socket.on("connect_error", (err) => {
     console.error("⚠️ Socket error:", err.message);
@@ -57,6 +53,11 @@ export const connectSocket = (token) => {
   return socket;
 };
 
-
+export const onTaskUpdated = (callback) => {
+  if (!socket) return;
+  socket.on("task-updated", (task) => {
+    console.log("📦 Task updated via socket:", task);
+    callback(task); // ننادي الكولباك اللي جاي من الكومبوننت
+  });}
 export const getSocket = () => socket;
 

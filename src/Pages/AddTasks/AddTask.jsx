@@ -15,10 +15,10 @@ const AddTask = () => {
 
   const [taskRemindMe, setTaskRemindMe] = useState(false);
   const [err, setErr] = useState("");
-
+  const [assignedTo, setAssignedTo] = useState("");
   const dispatch = useDispatch();
   const taskStatus = useSelector((state) => state.tasks.status);
-
+  const {users} = useSelector((state) => state.tasks);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -39,7 +39,10 @@ const AddTask = () => {
       description: taskDescription,
       dateTime: taskDateTime,
       remindMe: taskRemindMe,
-    };
+      assignedTo: assignedTo || [] 
+       };
+    // const { title, description, dateTime, remindMe, assignedTo } = req.body;
+
 
     try {
       const response = await dispatch(addTask(newTask)).unwrap();
@@ -183,6 +186,32 @@ const AddTask = () => {
             Remind Me
           </label>
         </div>
+        <div className="mb-4 m-1">
+  <label
+    htmlFor="assignedTo"
+    className="inline-block my-1 text-gray-500 text-md font-medium"
+  >
+    Assign To
+  </label>
+  <select
+    id="assignedTo"
+    className="w-full focus:outline-none p-2 border-[1px] rounded-lg"
+    value={assignedTo}
+    onChange={(e) => setAssignedTo(e.target.value)}
+  >
+   <option value="">Select a user</option>
+
+    {users && users.length > 0 ? (
+      users.map((user) => (
+        <option key={user._id} value={user._id}>
+          {user.username}
+        </option>
+      ))
+    ) : (
+      <option disabled>No users available</option>
+    )}
+  </select>
+</div>
 
         <button
           type="submit"

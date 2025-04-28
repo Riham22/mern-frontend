@@ -1,6 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { updateTask } from '../../Redux/Slices/TaskSlice';
+// import { io } from 'socket.io-client';
+import { getSocket, onTaskUpdated } from '../../utils/socketClient';
 
 const EditTaskForm = ({ task, onClose }) => {
   const dispatch = useDispatch();
@@ -9,12 +11,39 @@ const EditTaskForm = ({ task, onClose }) => {
   const [dateTime, setDateTime] = useState(task.dateTime);
   const [remindMe, setRemindMe] = useState(task.remindMe);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const updatedData = { title, description, dateTime, remindMe };
-    dispatch(updateTask({ id: task._id, updatedData }));
+    
+    await dispatch(updateTask({ id: task._id, updatedData }));
+  
+    const socket = getSocket();
+    if (socket) {
+      socket.emit('update-task', { taskId: task._id, updatedData: { ...updatedData, _id: task._id } });
+    }
+  
     onClose();
   };
+ 
+  useEffect(() => {
+    const socket = getSocket(); // نجيب السوكت اللي متوصل فعلاً
+  
+    if (!socket) return;
+  
+    const handleTaskUpdate = (updatedTask) => {
+      dispatch({
+        type: 'tasks/updateTask/fulfilled', // ده الريدوكس اكشن اللي بيحدث التاسك
+        payload: updatedTask
+      });
+    };
+  
+    onTaskUpdated(handleTaskUpdate); // نبعتله الكولباك عشان ينده لما يحصل تحديث
+  
+    return () => {
+      socket.off('task-updated');
+    };
+  }, [dispatch]);
+  
 
   return (
     <div className="p-4 border rounded-md shadow-md bg-white w-full max-w-md mx-auto">

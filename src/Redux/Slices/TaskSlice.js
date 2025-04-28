@@ -49,10 +49,22 @@ export const deleteTask = createAsyncThunk('delete', async (taskId, thunkAPI) =>
   }
 });
 
+
+export const fetchUsers = createAsyncThunk('get-users', async (_, thunkAPI) => {
+  try {
+    const response = await axios.get(`${BASE_URL}/users`, { withCredentials: true });
+    return response.data;
+  } catch (error) {
+    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
+  }
+});
+ 
+
 const taskSlice = createSlice({
   name: 'tasks',
   initialState: {
     tasks: [],
+    users: [],  
     status: 'idle',
     error: null,
   },
@@ -106,7 +118,7 @@ const taskSlice = createSlice({
       })
     builder
     .addCase(updateTask.fulfilled, (state, action) => {
-      const updatedTask = action.payload.task;
+      const updatedTask = action.payload;
       const index = state.tasks.findIndex(task => task._id === updatedTask._id);
       if (index !== -1) {
         state.tasks[index] = updatedTask;
@@ -116,6 +128,19 @@ const taskSlice = createSlice({
       .addCase(deleteTask.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.tasks = state.tasks.filter(task => task._id !== action.payload);
+      });
+
+      builder
+      .addCase(fetchUsers.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUsers.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.users = action.payload; // تخزين المستخدمين المسترجعين
+      })
+      .addCase(fetchUsers.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload || "Failed to fetch users";
       });
   }
 });
