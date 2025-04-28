@@ -85,15 +85,16 @@ const AddTask = () => {
       console.error("Error adding task:", error); // دا الايرور اللي طلعلي ف الكونسول اول ما دست submit
     }
   };
-  useEffect(() => {
-    dispatch(fetchUsers());
-  }, [dispatch]);
+
+  
   console.log("🚀 Users from in ADDTASKS Redux:", users);
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;
     console.log("🔑 Token from localStorage (for socket):", token);
+dispatch(fetchUsers());
+console.log("🚀 Users from in ADDTASKS Redux:", users);
 
     const socket = connectSocket(token);
     console.log("hi this is addTask.jsx useEffect");
