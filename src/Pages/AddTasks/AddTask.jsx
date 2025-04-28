@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTask } from "../../Redux/Slices/TaskSlice.js";
+import { addTask, fetchUsers } from "../../Redux/Slices/TaskSlice.js";
 import sound from "../../assets/notification.wav";
 import { addNotification } from "../../Redux/Slices/NotificationSlice.js";
 import { connectSocket } from "../../utils/socketClient.js";
@@ -85,7 +85,9 @@ const AddTask = () => {
       console.error("Error adding task:", error); // دا الايرور اللي طلعلي ف الكونسول اول ما دست submit
     }
   };
-
+  useEffect(() => {
+    dispatch(fetchUsers());
+  }, [dispatch]);
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (!token) return;

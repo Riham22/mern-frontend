@@ -50,15 +50,23 @@ export const deleteTask = createAsyncThunk('delete', async (taskId, thunkAPI) =>
 });
 
 
-export const fetchUsers = createAsyncThunk('get-users', async (_, thunkAPI) => {
-  try {
-    const response = await axios.get(`${BASE_URL}/users`, { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    return thunkAPI.rejectWithValue(error.response?.data?.message || 'Something went wrong');
+export const fetchUsers = createAsyncThunk(
+  "tasks/fetchUsers",
+  async (_, { rejectWithValue }) => {
+    try {
+      const token = localStorage.getItem("token");
+      const response = await axios.get(`${BASE_URL}/getAllUsersExceptCurrent`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        withCredentials: true
+      });
+      return response.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
   }
-});
- 
+);
 
 const taskSlice = createSlice({
   name: 'tasks',
